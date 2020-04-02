@@ -6,7 +6,7 @@ USER_NAME=$1
 
 
 # Create the user.
-adduser ${USER_NAME}
+adduser -D ${USER_NAME}
 
 # Set the password for the user.
 echo ${USER_NAME} | passwd --stdin ${USER_NAME}
