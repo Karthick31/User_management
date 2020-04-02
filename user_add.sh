@@ -2,12 +2,15 @@
 
 # This script creates an account on the system.
 
-USER_NAME=$1
+USERNAME=$1
+USERID=$2
+COMMENT=$3
+HOMEDIR=$4
 
 
 # Create the user.
-adduser -D ${USER_NAME}
+/usr/sbin/useradd -m -u $USERID -c "$COMMENT" -g $USERID -d $HOMEDIR -s /bin/bash $USERNAME
 
 # Set the password for the user.
-echo ${USER_NAME} | passwd --stdin ${USER_NAME}
+echo ${USERNAME} | passwd --stdin ${USER_NAME}
 
