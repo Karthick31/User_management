@@ -10,5 +10,5 @@ USERNAME=$1
 /usr/sbin/useradd -m -s /bin/bash $USERNAME
 
 # Set the password for the user.
-echo ${USERNAME} | passwd --stdin ${USERNAME}
+echo ${USERNAME} | sudo chpasswd
 
