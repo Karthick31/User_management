@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 # This script creates an account on the system.
 
 USERNAME=$1
