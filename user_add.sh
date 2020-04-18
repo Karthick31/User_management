@@ -3,7 +3,11 @@
 
 USERNAME=$1
 
-
+# check if the user alredy exist in the server
+if getent passwd $USERNAME > /dev/null 2>&1; then
+    echo -e "$GREEN $USERNAME exists"
+    exit 1
+fi
 
 # Create the user.
 /usr/sbin/useradd -m -s /bin/bash $USERNAME
