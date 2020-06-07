@@ -1,0 +1,54 @@
+#!/bin/bash
+# Description:  Run commands/scripts on remote hosts
+#set -x               
+ssh="ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 -q"
+
+if [[ ! $2 ]]; then
+       cat <<EOD
+
+Execute a local script or remote command on host(s) 
+
+Usage: $0 HOSTS SCRIPT [ARGS...]
+       $0 HOSTS COMMAND [ARGS...]
+
+where HOSTS :=
+       HOST,[HOST...]
+       FILENAME       # one host per line
+       all            # support group GUSO
+
+EOD
+        exit 1
+fi
+
+[[ $(whoami) == root ]] && { echo "Error: must not be run as root"; exit 1; }
+
+hostlist=$(echo "$1" | tr ',' ' ')
+shift
+[[ -f "$hostlist" ]] && hostlist=$(cat $hostlist | grep -v '^#' | awk '{print $1}' | grep -v '^$')
+#unset DISPLAY
+
+code=$1
+shift
+if [[ -r $code ]]; then
+    # code is in a file
+    code=$(cat $code)
+else
+    # code and args are on the cmdline
+    code="$code $*"
+fi
+args="$*"
+
+for host in $hostlist; do
+    shost=$(echo "$host" | cut -f1 -d.)
+    user=vagrant
+   # [[ "$args" == "TIME" ]] && args=$(perl -e 'print time') # used by run_sct2
+
+ 
+    echo "$code" |  $ssh $user@$host sudo 'bash --login -s' $args
+    status=$?
+    (( $status == 0 )) && msg="OK" || msg="ERR"
+
+    echo "$shost: remote script exit status: $status ($msg)" >&2 
+done
+
+echo
