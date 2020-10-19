@@ -41,9 +41,7 @@ args="$*"
 for host in $hostlist; do
     shost=$(echo "$host" | cut -f1 -d.)
     user=vagrant
-   # [[ "$args" == "TIME" ]] && args=$(perl -e 'print time') # used by run_sct2
-
- 
+  
     echo "$code" |  $ssh $user@$host sudo 'bash --login -s' $args
     status=$?
     (( $status == 0 )) && msg="OK" || msg="ERR"
